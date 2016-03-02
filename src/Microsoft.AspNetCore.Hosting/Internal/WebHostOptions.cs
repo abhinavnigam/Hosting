@@ -22,6 +22,7 @@ namespace Microsoft.AspNetCore.Hosting.Internal
             }
 
             Application = configuration[WebHostDefaults.ApplicationKey];
+            EnvironmentApplication = configuration[WebHostDefaults.EnvironmentApplicationKey];
             DetailedErrors = ParseBool(configuration, WebHostDefaults.DetailedErrorsKey);
             CaptureStartupErrors = ParseBool(configuration, WebHostDefaults.CaptureStartupErrorsKey);
             Environment = configuration[WebHostDefaults.EnvironmentKey] ?? configuration[OldEnvironmentKey];
@@ -31,6 +32,8 @@ namespace Microsoft.AspNetCore.Hosting.Internal
         }
 
         public string Application { get; set; }
+
+        public string EnvironmentApplication { get; set; }
 
         public bool DetailedErrors { get; set; }
 

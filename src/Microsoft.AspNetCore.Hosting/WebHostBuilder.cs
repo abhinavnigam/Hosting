@@ -199,10 +199,9 @@ namespace Microsoft.AspNetCore.Hosting
                 if (defaultPlatformServices.Application != null)
                 {
                     var appEnv = defaultPlatformServices.Application;
-                    if (!string.IsNullOrEmpty(_options.ApplicationBasePath))
-                    {
-                        appEnv = new WrappedApplicationEnvironment(_options.ApplicationBasePath, appEnv);
-                    }
+                    var applicationBasePath = ResolvePath(_options.ApplicationBasePath, appEnv.ApplicationBasePath);
+                    var environmentApplicationName = _options.EnvironmentApplication ?? _options.Application ?? appEnv.ApplicationName;
+                    appEnv = new WrappedApplicationEnvironment(applicationBasePath, environmentApplicationName, defaultPlatformServices.Application);
 
                     services.TryAddSingleton(appEnv);
                 }
@@ -223,10 +222,10 @@ namespace Microsoft.AspNetCore.Hosting
 
         private class WrappedApplicationEnvironment : IApplicationEnvironment
         {
-            public WrappedApplicationEnvironment(string applicationBasePath, IApplicationEnvironment env)
+            public WrappedApplicationEnvironment(string applicationBasePath, string environmentApplication, IApplicationEnvironment env)
             {
-                ApplicationBasePath = ResolvePath(applicationBasePath, env.ApplicationBasePath);
-                ApplicationName = env.ApplicationName;
+                ApplicationBasePath = applicationBasePath;
+                ApplicationName = environmentApplication;
                 ApplicationVersion = env.ApplicationVersion;
                 RuntimeFramework = env.RuntimeFramework;
             }
@@ -242,6 +241,11 @@ namespace Microsoft.AspNetCore.Hosting
 
         private static string ResolvePath(string applicationBasePath, string basePath)
         {
+            if (string.IsNullOrEmpty(applicationBasePath))
+            {
+                return basePath;
+            }
+
             if (Path.IsPathRooted(applicationBasePath))
             {
                 return applicationBasePath;

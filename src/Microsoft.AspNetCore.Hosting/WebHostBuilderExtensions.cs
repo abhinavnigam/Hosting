@@ -112,6 +112,16 @@ namespace Microsoft.AspNetCore.Hosting
             return hostBuilder.UseSetting(WebHostDefaults.ApplicationKey, startupAssemblyName);
         }
 
+        public static IWebHostBuilder UseEnvironmentStartup(this IWebHostBuilder hostBuilder, string environmentStartupAssemblyName)
+        {
+            if (environmentStartupAssemblyName == null)
+            {
+                throw new ArgumentNullException(nameof(environmentStartupAssemblyName));
+            }
+
+            return hostBuilder.UseSetting(WebHostDefaults.EnvironmentApplicationKey, environmentStartupAssemblyName);
+        }
+
         public static IWebHost Start(this IWebHostBuilder hostBuilder, params string[] urls)
         {
             var host = hostBuilder.UseUrls(urls).Build();

@@ -319,6 +319,31 @@ namespace Microsoft.AspNetCore.Hosting
             Assert.EndsWith(Path.DirectorySeparatorChar + "bar", basePath);
         }
 
+        [Fact]
+        public void DefaultEnvironmentApplicationNameIsApplicationName()
+        {
+            var builder = new ConfigurationBuilder();
+            var host = new WebHostBuilder()
+                .UseServer(new TestServer())
+                .UseStartup("Microsoft.AspNetCore.Hosting.Tests")
+                .Build();
+            
+            Assert.Equal("Microsoft.AspNetCore.Hosting.Tests", host.Services.GetService<IApplicationEnvironment>().ApplicationName);
+        }
+
+        [Fact]
+        public void EnvironmentApplicationNameOverridesApplicationName()
+        {
+            var builder = new ConfigurationBuilder();
+            var host = new WebHostBuilder()
+                .UseServer(new TestServer())
+                .UseStartup("Microsoft.AspNetCore.Hosting.Tests")
+                .UseEnvironmentStartup("Microsoft.AspNetCore.Hosting.Tests.Environment")
+                .Build();
+
+            Assert.Equal("Microsoft.AspNetCore.Hosting.Tests.Environment", host.Services.GetService<IApplicationEnvironment>().ApplicationName);
+        }
+
         private IWebHostBuilder CreateWebHostBuilder()
         {
             var vals = new Dictionary<string, string>

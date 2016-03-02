@@ -6,6 +6,7 @@ namespace Microsoft.AspNetCore.Hosting
     public static class WebHostDefaults
     {
         public static readonly string ApplicationKey = "application";
+        public static readonly string EnvironmentApplicationKey = "environmentApplication";
         public static readonly string DetailedErrorsKey = "detailedErrors";
         public static readonly string EnvironmentKey = "environment";
         public static readonly string ServerKey = "server";
